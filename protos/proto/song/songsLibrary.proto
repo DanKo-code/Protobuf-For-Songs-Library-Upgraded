@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package songsLibrary;
+
+option go_package = "kozlyakovsky.songsLibrary.v1;songsLibraryv1";
+
+service Song {
+  rpc GetSongs (GetSongsRequest) returns (GetSongsResponse);
+}
+
+message GetSongsRequest {
+  string id = 1;
+  string name = 2;
+  string group_name = 3;
+  string release_date = 4;
+  string text = 5;
+  string link = 6;
+  int64 page = 7;
+  int64 page_size = 8;
+}
+
+message GetSongsResponse {
+  string id = 1;
+  string name = 2;
+  string author_id = 3;
+  string author_name = 4;
+  string release_date = 5;
+  string text = 6;
+  string link = 7;
+}
