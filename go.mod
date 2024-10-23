@@ -1,3 +1,3 @@
-module Protobuf_For_UpgradedSongsLibrary
+module github.com/DanKo-code/Protobuf-For-Songs-Library-Upgraded
 
-go 1.23.1
+go 1.23
