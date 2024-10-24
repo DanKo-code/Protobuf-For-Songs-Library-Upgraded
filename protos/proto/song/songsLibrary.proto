@@ -6,8 +6,10 @@ option go_package = "kozlyakovsky.songsLibrary.v1;songsLibraryv1";
 
 service Song {
   rpc GetSongs (GetSongsRequest) returns (GetSongsResponseList);
+  rpc DeleteSong (DeleteSongsRequest) returns (DeleteSongsResponse);
 }
 
+//GetSongs
 message GetSongsRequest {
   string id = 1;
   string name = 2;
@@ -33,3 +35,19 @@ message GetSongsResponseList {
   repeated GetSongsResponse songs = 1;
 }
 
+
+//DeleteSong
+
+message DeleteSongsRequest {
+  string id = 1;
+}
+
+message DeleteSongsResponse {
+  string id = 1;
+  string name = 2;
+  string author_id = 3;
+  string author_name = 4;
+  string release_date = 5;
+  string text = 6;
+  string link = 7;
+}

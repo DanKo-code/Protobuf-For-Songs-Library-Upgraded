@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Song_GetSongs_FullMethodName = "/songsLibrary.Song/GetSongs"
+	Song_GetSongs_FullMethodName   = "/songsLibrary.Song/GetSongs"
+	Song_DeleteSong_FullMethodName = "/songsLibrary.Song/DeleteSong"
 )
 
 // SongClient is the client API for Song service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SongClient interface {
 	GetSongs(ctx context.Context, in *GetSongsRequest, opts ...grpc.CallOption) (*GetSongsResponseList, error)
+	DeleteSong(ctx context.Context, in *DeleteSongsRequest, opts ...grpc.CallOption) (*DeleteSongsResponse, error)
 }
 
 type songClient struct {
@@ -47,11 +49,22 @@ func (c *songClient) GetSongs(ctx context.Context, in *GetSongsRequest, opts ...
 	return out, nil
 }
 
+func (c *songClient) DeleteSong(ctx context.Context, in *DeleteSongsRequest, opts ...grpc.CallOption) (*DeleteSongsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteSongsResponse)
+	err := c.cc.Invoke(ctx, Song_DeleteSong_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SongServer is the server API for Song service.
 // All implementations must embed UnimplementedSongServer
 // for forward compatibility.
 type SongServer interface {
 	GetSongs(context.Context, *GetSongsRequest) (*GetSongsResponseList, error)
+	DeleteSong(context.Context, *DeleteSongsRequest) (*DeleteSongsResponse, error)
 	mustEmbedUnimplementedSongServer()
 }
 
@@ -64,6 +77,9 @@ type UnimplementedSongServer struct{}
 
 func (UnimplementedSongServer) GetSongs(context.Context, *GetSongsRequest) (*GetSongsResponseList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSongs not implemented")
+}
+func (UnimplementedSongServer) DeleteSong(context.Context, *DeleteSongsRequest) (*DeleteSongsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteSong not implemented")
 }
 func (UnimplementedSongServer) mustEmbedUnimplementedSongServer() {}
 func (UnimplementedSongServer) testEmbeddedByValue()              {}
@@ -104,6 +120,24 @@ func _Song_GetSongs_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Song_DeleteSong_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteSongsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SongServer).DeleteSong(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Song_DeleteSong_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SongServer).DeleteSong(ctx, req.(*DeleteSongsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Song_ServiceDesc is the grpc.ServiceDesc for Song service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +148,10 @@ var Song_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSongs",
 			Handler:    _Song_GetSongs_Handler,
+		},
+		{
+			MethodName: "DeleteSong",
+			Handler:    _Song_DeleteSong_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
