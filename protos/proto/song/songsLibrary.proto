@@ -5,7 +5,7 @@ package songsLibrary;
 option go_package = "kozlyakovsky.songsLibrary.v1;songsLibraryv1";
 
 service Song {
-  rpc GetSongs (GetSongsRequest) returns (GetSongsResponse);
+  rpc GetSongs (GetSongsRequest) returns (GetSongsResponseList);
 }
 
 message GetSongsRequest {
@@ -28,3 +28,8 @@ message GetSongsResponse {
   string text = 6;
   string link = 7;
 }
+
+message GetSongsResponseList {
+  repeated GetSongsResponse songs = 1;
+}
+

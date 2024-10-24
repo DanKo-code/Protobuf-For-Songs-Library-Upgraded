@@ -26,7 +26,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SongClient interface {
-	GetSongs(ctx context.Context, in *GetSongsRequest, opts ...grpc.CallOption) (*GetSongsResponse, error)
+	GetSongs(ctx context.Context, in *GetSongsRequest, opts ...grpc.CallOption) (*GetSongsResponseList, error)
 }
 
 type songClient struct {
@@ -37,9 +37,9 @@ func NewSongClient(cc grpc.ClientConnInterface) SongClient {
 	return &songClient{cc}
 }
 
-func (c *songClient) GetSongs(ctx context.Context, in *GetSongsRequest, opts ...grpc.CallOption) (*GetSongsResponse, error) {
+func (c *songClient) GetSongs(ctx context.Context, in *GetSongsRequest, opts ...grpc.CallOption) (*GetSongsResponseList, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetSongsResponse)
+	out := new(GetSongsResponseList)
 	err := c.cc.Invoke(ctx, Song_GetSongs_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func (c *songClient) GetSongs(ctx context.Context, in *GetSongsRequest, opts ...
 // All implementations must embed UnimplementedSongServer
 // for forward compatibility.
 type SongServer interface {
-	GetSongs(context.Context, *GetSongsRequest) (*GetSongsResponse, error)
+	GetSongs(context.Context, *GetSongsRequest) (*GetSongsResponseList, error)
 	mustEmbedUnimplementedSongServer()
 }
 
@@ -62,7 +62,7 @@ type SongServer interface {
 // pointer dereference when methods are called.
 type UnimplementedSongServer struct{}
 
-func (UnimplementedSongServer) GetSongs(context.Context, *GetSongsRequest) (*GetSongsResponse, error) {
+func (UnimplementedSongServer) GetSongs(context.Context, *GetSongsRequest) (*GetSongsResponseList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSongs not implemented")
 }
 func (UnimplementedSongServer) mustEmbedUnimplementedSongServer() {}
