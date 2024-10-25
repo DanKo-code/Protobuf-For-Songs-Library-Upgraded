@@ -9,7 +9,11 @@ service Song {
   rpc DeleteSong (DeleteSongsRequest) returns (DeleteSongsResponse);
 }
 
-//GetSongs
+service SongData {
+  rpc GetSongData (GetSongDataRequest) returns (GetSongDataResponse);
+}
+
+//Song.GetSongs
 message GetSongsRequest {
   string id = 1;
   string name = 2;
@@ -36,7 +40,7 @@ message GetSongsResponseList {
 }
 
 
-//DeleteSong
+//Song.DeleteSong
 
 message DeleteSongsRequest {
   string id = 1;
@@ -50,4 +54,19 @@ message DeleteSongsResponse {
   string release_date = 5;
   string text = 6;
   string link = 7;
+}
+
+//SongData.GetSongData
+
+message GetSongDataRequest{
+    string group = 1;
+    string songName = 2;
+}
+
+message GetSongDataResponse {
+    string ip = 1;
+    string link = 2;
+    string releaseDate = 3;
+    string trackName = 4;
+    string artistName = 5;
 }

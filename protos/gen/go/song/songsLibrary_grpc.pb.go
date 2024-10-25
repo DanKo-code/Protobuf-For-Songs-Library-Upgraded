@@ -157,3 +157,105 @@ var Song_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "song/songsLibrary.proto",
 }
+
+const (
+	SongData_GetSongData_FullMethodName = "/songsLibrary.SongData/GetSongData"
+)
+
+// SongDataClient is the client API for SongData service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type SongDataClient interface {
+	GetSongData(ctx context.Context, in *GetSongDataRequest, opts ...grpc.CallOption) (*GetSongDataResponse, error)
+}
+
+type songDataClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewSongDataClient(cc grpc.ClientConnInterface) SongDataClient {
+	return &songDataClient{cc}
+}
+
+func (c *songDataClient) GetSongData(ctx context.Context, in *GetSongDataRequest, opts ...grpc.CallOption) (*GetSongDataResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetSongDataResponse)
+	err := c.cc.Invoke(ctx, SongData_GetSongData_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// SongDataServer is the server API for SongData service.
+// All implementations must embed UnimplementedSongDataServer
+// for forward compatibility.
+type SongDataServer interface {
+	GetSongData(context.Context, *GetSongDataRequest) (*GetSongDataResponse, error)
+	mustEmbedUnimplementedSongDataServer()
+}
+
+// UnimplementedSongDataServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedSongDataServer struct{}
+
+func (UnimplementedSongDataServer) GetSongData(context.Context, *GetSongDataRequest) (*GetSongDataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSongData not implemented")
+}
+func (UnimplementedSongDataServer) mustEmbedUnimplementedSongDataServer() {}
+func (UnimplementedSongDataServer) testEmbeddedByValue()                  {}
+
+// UnsafeSongDataServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to SongDataServer will
+// result in compilation errors.
+type UnsafeSongDataServer interface {
+	mustEmbedUnimplementedSongDataServer()
+}
+
+func RegisterSongDataServer(s grpc.ServiceRegistrar, srv SongDataServer) {
+	// If the following call pancis, it indicates UnimplementedSongDataServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&SongData_ServiceDesc, srv)
+}
+
+func _SongData_GetSongData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSongDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SongDataServer).GetSongData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SongData_GetSongData_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SongDataServer).GetSongData(ctx, req.(*GetSongDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// SongData_ServiceDesc is the grpc.ServiceDesc for SongData service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var SongData_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "songsLibrary.SongData",
+	HandlerType: (*SongDataServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetSongData",
+			Handler:    _SongData_GetSongData_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "song/songsLibrary.proto",
+}
